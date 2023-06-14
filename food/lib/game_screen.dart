@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:food/home_screen.dart';
 import 'package:food/db/database_helper.dart';
+import 'package:path_provider/path_provider.dart';
 
 //import dart ffi
 class GameScreen extends StatefulWidget {
@@ -45,6 +46,17 @@ class _GameScreenState extends State<GameScreen> {
       _currentPlayer = "X";
       _winner = "";
       _gameOver = false;
+    });
+  }
+
+  //Eliminar datos
+  Future<void> _deleteData() async {
+    final dbHelper = DatabaseHelper();
+    await dbHelper
+        .deleteAllGames(); // Llama al método deleteAllGames para eliminar todos los registros de la tabla
+
+    setState(() {
+      // Actualiza el estado de la pantalla o realiza cualquier otra acción necesaria
     });
   }
 
@@ -147,8 +159,8 @@ class _GameScreenState extends State<GameScreen> {
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: _currentPlayer == "X"
-                              ? Color(0xFFE25041)
-                              : Color(0xFF1CBD9E),
+                              ? Color.fromARGB(255, 20, 183, 139)
+                              : Color.fromARGB(255, 187, 124, 227),
                         ),
                       ),
                     ],
@@ -214,7 +226,7 @@ class _GameScreenState extends State<GameScreen> {
                   },
                   child: const Icon(
                     Icons.arrow_circle_left_rounded,
-                    size: 50,
+                    size: 40,
                     color: Colors.yellow,
                   ),
                 ),
@@ -236,8 +248,20 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
+                MaterialButton(
+                  shape: const CircleBorder(),
+                  color: Color.fromARGB(255, 187, 124, 227),
+                  padding: const EdgeInsets.all(20),
+                  onPressed: _deleteData,
+                  child: const Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red,
+                  ),
+                ),
               ],
             ),
+            SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
@@ -274,7 +298,8 @@ class _GameScreenState extends State<GameScreen> {
                           final player2 = game['player2'];
                           final winner = game['winner'];
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 8),
                             child: Text(
                               '$player1 vs $player2: $winner',
                               style: TextStyle(
@@ -290,6 +315,7 @@ class _GameScreenState extends State<GameScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 20)
           ],
         ),
       ),

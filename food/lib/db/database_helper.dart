@@ -51,6 +51,20 @@ class DatabaseHelper {
     return id;
   }
 
+  Future<int> deleteGame(int id) async {
+    final db = await database;
+    return await db.delete(
+      'games',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> deleteAllGames() async {
+    final db = await database;
+    return await db.delete('games');
+  }
+
   Future<List<Map<String, dynamic>>> getGames() async {
     final db = await database;
     return await db.query('games');
